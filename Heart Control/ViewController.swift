@@ -70,19 +70,30 @@ class ViewController: UIViewController, WCSessionDelegate {
         print("didReceiveMessageData")
         DispatchQueue.main.async { [weak self] in
             
-            self?.heartRateLabel.text = message["heartRate"] as? String
-            if let xAccel = message["x"] as? String, let yAccel = message["y"] as? String, let zAccel = message["z"] as? String, let date = message["date"] as? Date {
-                let d = Date()
-                let interval = d.timeIntervalSince(date)
-                let intervalString = String(format: "%.2f", interval)
+            if let accelerationData = message["accelerator"] as? [String: Any] {
+                if let x = accelerationData["x"] as? Double {
+                    self?.xAccelerationLabel.text = "\(x)"
+                }
                 
-                self?.xAccelerationLabel.text = xAccel
-                self?.yAccelerationLabel.text = yAccel
-                self?.zAccelerationLabel.text = zAccel
+                if let y = accelerationData["y"] as? Double {
+                    self?.yAccelerationLabel.text = "\(y)"
+                }
+                
+                if let z = accelerationData["z"] as? Double {
+                    self?.zAccelerationLabel.text = "\(z)"
+                }
+            }
+            
+            if let date = message["date"] as? Date {
+                let interval = Date().timeIntervalSince(date)
+                let intervalString = String(format: "%.2f", interval)
                 self?.latencyLabel.text = "latency: \(intervalString)"
+            }
+            
+            if let heartRate = message["heartRate"] as? Double {
+                self?.heartRateLabel.text = "\(heartRate)"
             }
         }
     }
-
 }
 

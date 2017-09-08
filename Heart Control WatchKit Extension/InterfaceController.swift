@@ -10,34 +10,38 @@ import WatchKit
 import CoreMotion
 import WatchConnectivity
 
-class InterfaceController: WKInterfaceController, WCSessionDelegate {
-
-    // MARK: - Outlets
+class InterfaceController: WKInterfaceController {
 
     @IBOutlet var heartRateLabel: WKInterfaceLabel!
-    
     @IBOutlet var xAccelLabel: WKInterfaceLabel!
     @IBOutlet var yAccelLabel: WKInterfaceLabel!
     @IBOutlet var zAccelLabel: WKInterfaceLabel!
     
-    @IBAction func startWorkoutAction() {
-        workoutManager.start()
-    }
-
-    @IBAction func stopWorkoutAction() {
-        workoutManager.stop()
-    }
-    // MARK: - Properties
-
+    private var session: WCSession!
     private let workoutManager = WorkoutManager()
     private let motionManager = CMMotionManager()
+    private var timer: Timer?
     
-    private var session: WCSession!
-    private var accelerationArray: [AccelerationData] = []
+    fileprivate var isActivationComplete = false
+    fileprivate var accelerationData: AccelerationData? {
+        
+        didSet {
+            
+            if let accelerationData = accelerationData {
+                xAccelLabel.setText(String(format: "%.3f", accelerationData.x))
+                yAccelLabel.setText(String(format: "%.3f", accelerationData.y))
+                zAccelLabel.setText(String(format: "%.3f", accelerationData.z))
+            }
+        }
+    }
     
-    var accelerometerObservers = [(Double, Double, Double) -> Void]()
-    
-    private var isActivationComplete = false
+    fileprivate var heartRate: Double? {
+        didSet {
+            if let heartRate = heartRate {
+                heartRateLabel.setText(String(format: "%.0f", heartRate))
+            }
+        }
+    }
     
     // MARK: - Lifecycle
     
@@ -67,70 +71,68 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
         if motionManager.isAccelerometerAvailable {
             
             guard let operation = OperationQueue.current else { return }
-            motionManager.startAccelerometerUpdates()
-            
-            motionManager.startAccelerometerUpdates(to: operation, withHandler: { (data, error) in
+            motionManager.startAccelerometerUpdates(to: operation) { [unowned self] (data, error) in
+                
                 if self.isActivationComplete {
-                    guard let dataAccelX = data?.acceleration.x, let dataAccelY = data?.acceleration.y, let dataAccelZ = data?.acceleration.z else { return }
-                    self.xAccelLabel.setText(String(format: "%.3f", dataAccelX))
-                    self.yAccelLabel.setText(String(format: "%.3f", dataAccelY))
-                    self.zAccelLabel.setText(String(format: "%.3f", dataAccelZ))
-                    self.notifyAccelerometerObservers(x: dataAccelX, y: dataAccelY, z: dataAccelZ)
+                    guard let data = data else { return }
+                    self.accelerationData = AccelerationData(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z)
                 }
-            })
-        }
-        else {
+            }
+        } else {
             xAccelLabel.setText("not available")
             yAccelLabel.setText("not available")
             zAccelLabel.setText("not available")
         }
     }
     
-    private func notifyAccelerometerObservers(x: Double, y: Double, z: Double) {
-        let d = Date()
-        self.sendAccelerationToIphone(x: "\(x)", y: "\(y)", z: "\(z)", date: d)
+    @IBAction func startWorkoutAction() {
+        workoutManager.start()
+        
+        if timer == nil {
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                self.sendDataToParentApp()
+            }
+        }
     }
+    
+    @IBAction func stopWorkoutAction() {
+        workoutManager.stop()
+        motionManager.stopAccelerometerUpdates()
+        
+        if let timer = timer {
+            timer.invalidate()
+        }
+    }
+    
+    func sendDataToParentApp() {
+        
+        let accelerationData: [String: Any] = [
+            "x": self.accelerationData?.x ?? "not available",
+            "y": self.accelerationData?.y ?? "not available",
+            "z": self.accelerationData?.z ?? "not available"
+        ]
+        
+        let data: [String: Any] = [
+            "accelerator": accelerationData,
+            "date": Date(),
+            "heartRate": heartRate ?? "-"
+        ]
+    
+        session.sendMessage(data, replyHandler: nil, errorHandler: nil)
+    }
+}
+
+//MARK: - WKSessionDelegate
+
+extension InterfaceController: WCSessionDelegate {
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         print("activationDidCompleteWith")
         isActivationComplete = true
-        self.session?.sendMessage(["heartRate": "100"], replyHandler: { (_) in
-            print("message send success")
-        }, errorHandler: { (_) in
-            print("sending message failed")
-        })
-    }
-    
-    func sessionReachabilityDidChange(_ session: WCSession) {
-        print("sessionReachabilityDidChange")
-    }
-    
-    func sendHeartRateToIphone(heartRate: Double) {
-        let applicationData = ["heartRate": "\(heartRate)"]
-        session?.sendMessage(applicationData, replyHandler: nil, errorHandler: nil)
-    }
-    
-    func sendAccelerationToIphone(x: String, y: String, z: String, date: Date) {
-        
-        let accelerationData: [String:Any] = [
-            "x": x,
-            "y": y,
-            "z": z,
-            "date": date
-        ]
-        
-        accelerationArray.append(AccelerationData(x: x, y: y, z: z, date: date))
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-//            self?.session.sendMessage(["data": self?.accelerationArray as Any], replyHandler: nil, errorHandler: nil)
-//            self?.accelerationArray = []
-//        }
-        
-        session.sendMessage(accelerationData, replyHandler: nil, errorHandler: nil)
     }
 }
 
-// MARK: - Workout Manager Delegate
+//MARK: - Workout Manager Delegate
 
 extension InterfaceController: WorkoutManagerDelegate {
 
@@ -138,15 +140,12 @@ extension InterfaceController: WorkoutManagerDelegate {
     }
 
     func workoutManager(_ manager: WorkoutManager, didChangeHeartRateTo newHeartRate: HeartRate) {
-        heartRateLabel.setText(String(format: "%.0f", newHeartRate.bpm))
-//        sendHeartRateToIphone(heartRate: newHeartRate.bpm)
+        self.heartRate = newHeartRate.bpm
     }
-
 }
 
 struct AccelerationData {
-    let x: String
-    let y: String
-    let z: String
-    let date: Date
+    let x: Double
+    let y: Double
+    let z: Double
 }
