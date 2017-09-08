@@ -48,7 +48,7 @@ class InterfaceController: WKInterfaceController {
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
-        motionManager.accelerometerUpdateInterval = 0.5
+        motionManager.accelerometerUpdateInterval = 1 / 30
     }
 
     override func willActivate() {
@@ -101,6 +101,7 @@ class InterfaceController: WKInterfaceController {
         
         if let timer = timer {
             timer.invalidate()
+            self.timer = nil
         }
     }
     
@@ -115,10 +116,15 @@ class InterfaceController: WKInterfaceController {
         let data: [String: Any] = [
             "accelerator": accelerationData,
             "date": Date(),
-            "heartRate": heartRate ?? "-"
+            "heartRate": heartRate ?? "-",
+            "repeat": Array(repeating: accelerationData, count: 30)
         ]
     
-        session.sendMessage(data, replyHandler: nil, errorHandler: nil)
+        session.sendMessage(data, replyHandler: { reply in
+            print(reply)
+        }) { error in
+            print(error)
+        }
     }
 }
 

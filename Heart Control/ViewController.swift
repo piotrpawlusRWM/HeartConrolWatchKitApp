@@ -68,6 +68,9 @@ class ViewController: UIViewController, WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         print("didReceiveMessageData")
+        
+        replyHandler(["Works": "well"])
+        
         DispatchQueue.main.async { [weak self] in
             
             if let accelerationData = message["accelerator"] as? [String: Any] {
