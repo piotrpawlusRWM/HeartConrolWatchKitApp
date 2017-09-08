@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Heart_Control" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Heart Control" translatesAutoresizingMaskIntoConstraints="NO" id="ODf-dh-ipx">
+                                <rect key="frame" x="90" y="83.5" width="195" height="500"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open the app on your watch and measure your heart rate, continuously." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qfG-Lo-oms">
+                                <rect key="frame" x="16" y="181.5" width="343" height="41"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yam-UG-AKw">
+                                <rect key="frame" x="19" y="614" width="60" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="bEW-Q3-cTS"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ANi-df-MYY">
+                                <rect key="frame" x="157.5" y="614" width="60" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="DDe-j8-4gQ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dHo-ZF-RZB">
+                                <rect key="frame" x="282" y="614" width="60" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="9yh-WX-Ed4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JeE-ZR-rsT">
+                                <rect key="frame" x="24" y="553" width="327" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bBp-nd-Wbp">
+                                <rect key="frame" x="147" y="487" width="80" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="0q3-wb-5wU"/>
+                                    <constraint firstAttribute="width" constant="80" id="nuQ-Xg-PtH"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KsN-nd-Mka">
+                                <rect key="frame" x="164" y="436" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="startWatchApp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TvC-9v-xTi"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.76078431372549016" green="0.82352941176470584" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="dHo-ZF-RZB" firstAttribute="centerY" secondItem="yam-UG-AKw" secondAttribute="centerY" id="0Y2-it-asU"/>
+                            <constraint firstItem="ODf-dh-ipx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5jh-s2-3jC"/>
+                            <constraint firstItem="KsN-nd-Mka" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="64v-qG-9JB"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ANi-df-MYY" secondAttribute="bottom" constant="32" id="7VJ-I4-5q1"/>
+                            <constraint firstAttribute="trailing" secondItem="ODf-dh-ipx" secondAttribute="trailing" constant="90" id="A6H-dq-ewK"/>
+                            <constraint firstItem="qfG-Lo-oms" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="AVh-1y-8WM"/>
+                            <constraint firstItem="JeE-ZR-rsT" firstAttribute="top" secondItem="bBp-nd-Wbp" secondAttribute="bottom" constant="26" id="B7W-BN-wiF"/>
+                            <constraint firstItem="ODf-dh-ipx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="BsD-g9-leV"/>
+                            <constraint firstItem="bBp-nd-Wbp" firstAttribute="top" secondItem="KsN-nd-Mka" secondAttribute="bottom" constant="21" id="CTT-6u-rXj"/>
+                            <constraint firstItem="qfG-Lo-oms" firstAttribute="top" secondItem="ODf-dh-ipx" secondAttribute="bottom" constant="-402" id="Ftl-YW-x5x"/>
+                            <constraint firstItem="qfG-Lo-oms" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="LAP-yv-fVI"/>
+                            <constraint firstItem="ANi-df-MYY" firstAttribute="centerY" secondItem="yam-UG-AKw" secondAttribute="centerY" id="LZN-Ft-m8d"/>
+                            <constraint firstItem="JeE-ZR-rsT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Mjh-va-xg6"/>
+                            <constraint firstItem="ANi-df-MYY" firstAttribute="leading" secondItem="yam-UG-AKw" secondAttribute="trailing" constant="78.5" id="N9D-gc-v1U"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="JeE-ZR-rsT" secondAttribute="trailing" constant="8" id="Oc3-5c-m3W"/>
+                            <constraint firstItem="bBp-nd-Wbp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="QXa-nG-NCP"/>
+                            <constraint firstItem="ODf-dh-ipx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="90" id="jeT-CS-j06"/>
+                            <constraint firstItem="dHo-ZF-RZB" firstAttribute="leading" secondItem="ANi-df-MYY" secondAttribute="trailing" constant="64.5" id="pce-ZV-4V5"/>
+                            <constraint firstItem="JeE-ZR-rsT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="8" id="wUJ-cN-DFf"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bBp-nd-Wbp" secondAttribute="bottom" constant="140" id="wqR-YC-fr3"/>
+                            <constraint firstItem="ANi-df-MYY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zab-FE-ODO"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="heartRateLabel" destination="bBp-nd-Wbp" id="5h1-c2-ueY"/>
+                        <outlet property="latencyLabel" destination="JeE-ZR-rsT" id="YGn-wd-FPD"/>
+                        <outlet property="xAccelerationLabel" destination="yam-UG-AKw" id="fZa-6o-5O6"/>
+                        <outlet property="yAccelerationLabel" destination="ANi-df-MYY" id="Ags-Th-LsC"/>
+                        <outlet property="zAccelerationLabel" destination="dHo-ZF-RZB" id="SYk-nP-ps5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="24.800000000000001" y="34.632683658170919"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Heart Control" width="500" height="500"/>
+    </resources>
+</document>

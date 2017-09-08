@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch38" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="12029"/>
+    </dependencies>
+    <scenes>
+        <!--Heart Control-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller title="Heart Control" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Heart_Control_WatchKit_App" customModuleProvider="target">
+                    <items>
+                        <group width="1" alignment="right" spacing="5" id="Omy-g0-taR">
+                            <items>
+                                <label alignment="right" text="--" textAlignment="center" id="q60-id-Pm7">
+                                    <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
+                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="font" type="system" weight="medium" pointSize="60"/>
+                                </label>
+                                <label alignment="right" text="BPM" id="vo6-Km-Myq">
+                                    <accessibilityTraits key="accessibilityTraits" staticText="YES" notEnabled="YES"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" contentMode="scaleAspectFit" id="v8z-Z5-oqf">
+                            <items>
+                                <label width="32" alignment="left" text="x" baselineAdjustment="alignCenters" id="kMN-LQ-G7K"/>
+                                <label width="35" alignment="left" text="y" id="JkR-nH-qHd"/>
+                                <label width="23" alignment="left" text="z" id="8h5-fE-Bga"/>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" id="jhm-Lk-CDE">
+                            <items>
+                                <button width="67" alignment="left" title="START" id="IOy-Cy-vr6">
+                                    <connections>
+                                        <action selector="startWorkoutAction" destination="AgC-eL-Hgc" id="d0M-M0-AEy"/>
+                                    </connections>
+                                </button>
+                                <button width="66" alignment="left" title="STOP" id="gfi-jm-kch">
+                                    <connections>
+                                        <action selector="stopWorkoutAction" destination="AgC-eL-Hgc" id="hCu-M2-11Q"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="heartRateLabel" destination="q60-id-Pm7" id="gxC-k9-Omc"/>
+                        <outlet property="startWorkoutAction" destination="IOy-Cy-vr6" id="a98-GE-BOd"/>
+                        <outlet property="stopWorkoutAction" destination="gfi-jm-kch" id="hic-F9-fq5"/>
+                        <outlet property="xAccelLabel" destination="kMN-LQ-G7K" id="CXo-Jg-bAR"/>
+                        <outlet property="yAccelLabel" destination="JkR-nH-qHd" id="kfe-eY-v7W"/>
+                        <outlet property="zAccelLabel" destination="8h5-fE-Bga" id="XYA-RU-Yi0"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="34" y="44"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+</document>
