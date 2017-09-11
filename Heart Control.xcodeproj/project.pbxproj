@@ -26,6 +26,11 @@
 		BE70700B1D57A14300E41B95 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE70700A1D57A14300E41B95 /* HealthKit.framework */; };
 		BE70700D1D57A29500E41B95 /* AuthorizationManger.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */; };
 		BEB5C5BB1D4F656D00BBF490 /* HeartRateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */; };
+		C1EB5A661F667DA90088D05A /* CoreDataProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = C1EB5A641F667DA90088D05A /* CoreDataProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C1EB5A691F667DA90088D05A /* CoreDataProxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1EB5A621F667DA90088D05A /* CoreDataProxy.framework */; };
+		C1EB5A6A1F667DA90088D05A /* CoreDataProxy.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1EB5A621F667DA90088D05A /* CoreDataProxy.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1EB5A701F667DCE0088D05A /* WatchModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C1EB5A6E1F667DCE0088D05A /* WatchModel.xcdatamodeld */; };
+		C1EB5A721F667E3F0088D05A /* CoreDataProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EB5A711F667E3F0088D05A /* CoreDataProxy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +47,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = BE25B0071D4F33B100DAF094;
 			remoteInfo = "Heart Control WatchKit Extension";
+		};
+		C1EB5A671F667DA90088D05A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE25AFDF1D4F33B000DAF094 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1EB5A611F667DA90088D05A;
+			remoteInfo = CoreDataProxy;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -66,6 +78,17 @@
 				BE25AFFA1D4F33B100DAF094 /* Heart Control WatchKit App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1EB5A5C1F667D6A0088D05A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C1EB5A6A1F667DA90088D05A /* CoreDataProxy.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -96,6 +119,11 @@
 		BE70700A1D57A14300E41B95 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		BE70700C1D57A29500E41B95 /* AuthorizationManger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationManger.swift; sourceTree = "<group>"; };
 		BEB5C5BA1D4F656D00BBF490 /* HeartRateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeartRateManager.swift; sourceTree = "<group>"; };
+		C1EB5A621F667DA90088D05A /* CoreDataProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreDataProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1EB5A641F667DA90088D05A /* CoreDataProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataProxy.h; sourceTree = "<group>"; };
+		C1EB5A651F667DA90088D05A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1EB5A6F1F667DCE0088D05A /* WatchModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WatchModel.xcdatamodel; sourceTree = "<group>"; };
+		C1EB5A711F667E3F0088D05A /* CoreDataProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataProxy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A1E59AE1F60151A00D16553 /* HealthKit.framework in Frameworks */,
+				C1EB5A691F667DA90088D05A /* CoreDataProxy.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +141,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE70700B1D57A14300E41B95 /* HealthKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1EB5A5E1F667DA90088D05A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +160,7 @@
 				BE25AFE91D4F33B100DAF094 /* Heart Control */,
 				BE25AFFD1D4F33B100DAF094 /* Heart Control WatchKit App */,
 				BE25B00C1D4F33B100DAF094 /* Heart Control WatchKit Extension */,
+				C1EB5A631F667DA90088D05A /* CoreDataProxy */,
 				BE25AFE81D4F33B100DAF094 /* Products */,
 				BE496A191D4F467100C82C4F /* Frameworks */,
 			);
@@ -135,6 +172,7 @@
 				BE25AFE71D4F33B100DAF094 /* Heart Control.app */,
 				BE25AFF91D4F33B100DAF094 /* Heart Control WatchKit App.app */,
 				BE25B0081D4F33B100DAF094 /* Heart Control WatchKit Extension.appex */,
+				C1EB5A621F667DA90088D05A /* CoreDataProxy.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -213,7 +251,29 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C1EB5A631F667DA90088D05A /* CoreDataProxy */ = {
+			isa = PBXGroup;
+			children = (
+				C1EB5A641F667DA90088D05A /* CoreDataProxy.h */,
+				C1EB5A651F667DA90088D05A /* Info.plist */,
+				C1EB5A6E1F667DCE0088D05A /* WatchModel.xcdatamodeld */,
+				C1EB5A711F667E3F0088D05A /* CoreDataProxy.swift */,
+			);
+			path = CoreDataProxy;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		C1EB5A5F1F667DA90088D05A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1EB5A661F667DA90088D05A /* CoreDataProxy.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		BE25AFE61D4F33B000DAF094 /* Heart Control */ = {
@@ -224,11 +284,13 @@
 				BE25AFE41D4F33B000DAF094 /* Frameworks */,
 				BE25AFE51D4F33B000DAF094 /* Resources */,
 				BE25B01D1D4F33B100DAF094 /* Embed Watch Content */,
+				C1EB5A5C1F667D6A0088D05A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				BE25AFFC1D4F33B100DAF094 /* PBXTargetDependency */,
+				C1EB5A681F667DA90088D05A /* PBXTargetDependency */,
 			);
 			name = "Heart Control";
 			productName = "Heart Control";
@@ -268,6 +330,24 @@
 			productName = "Heart Control WatchKit Extension";
 			productReference = BE25B0081D4F33B100DAF094 /* Heart Control WatchKit Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
+		};
+		C1EB5A611F667DA90088D05A /* CoreDataProxy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1EB5A6B1F667DA90088D05A /* Build configuration list for PBXNativeTarget "CoreDataProxy" */;
+			buildPhases = (
+				C1EB5A5D1F667DA90088D05A /* Sources */,
+				C1EB5A5E1F667DA90088D05A /* Frameworks */,
+				C1EB5A5F1F667DA90088D05A /* Headers */,
+				C1EB5A601F667DA90088D05A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CoreDataProxy;
+			productName = CoreDataProxy;
+			productReference = C1EB5A621F667DA90088D05A /* CoreDataProxy.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -313,6 +393,12 @@
 							};
 						};
 					};
+					C1EB5A611F667DA90088D05A = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 78CQWFZKPC;
+						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = BE25AFE21D4F33B000DAF094 /* Build configuration list for PBXProject "Heart Control" */;
@@ -331,6 +417,7 @@
 				BE25AFE61D4F33B000DAF094 /* Heart Control */,
 				BE25AFF81D4F33B100DAF094 /* Heart Control WatchKit App */,
 				BE25B0071D4F33B100DAF094 /* Heart Control WatchKit Extension */,
+				C1EB5A611F667DA90088D05A /* CoreDataProxy */,
 			);
 		};
 /* End PBXProject section */
@@ -363,6 +450,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C1EB5A601F667DA90088D05A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -389,6 +483,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C1EB5A5D1F667DA90088D05A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1EB5A701F667DCE0088D05A /* WatchModel.xcdatamodeld in Sources */,
+				C1EB5A721F667E3F0088D05A /* CoreDataProxy.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -401,6 +504,11 @@
 			isa = PBXTargetDependency;
 			target = BE25B0071D4F33B100DAF094 /* Heart Control WatchKit Extension */;
 			targetProxy = BE25B00A1D4F33B100DAF094 /* PBXContainerItemProxy */;
+		};
+		C1EB5A681F667DA90088D05A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C1EB5A611F667DA90088D05A /* CoreDataProxy */;
+			targetProxy = C1EB5A671F667DA90088D05A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -604,6 +712,7 @@
 		BE25B01F1D4F33B100DAF094 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Heart Control/Heart Control.entitlements";
 				DEVELOPMENT_TEAM = 78CQWFZKPC;
@@ -620,6 +729,7 @@
 		BE25B0201D4F33B100DAF094 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Heart Control/Heart Control.entitlements";
 				DEVELOPMENT_TEAM = 78CQWFZKPC;
@@ -630,6 +740,59 @@
 				PROVISIONING_PROFILE = "aa4a1b8a-10e2-4c26-96ed-d10f425d35d8";
 				PROVISIONING_PROFILE_SPECIFIER = UniversalAppDevelopment;
 				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		C1EB5A6C1F667DA90088D05A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 78CQWFZKPC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = CoreDataProxy/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.railwaymen.CoreDataProxy;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		C1EB5A6D1F667DA90088D05A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 78CQWFZKPC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = CoreDataProxy/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.railwaymen.CoreDataProxy;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -672,7 +835,28 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		C1EB5A6B1F667DA90088D05A /* Build configuration list for PBXNativeTarget "CoreDataProxy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1EB5A6C1F667DA90088D05A /* Debug */,
+				C1EB5A6D1F667DA90088D05A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C1EB5A6E1F667DCE0088D05A /* WatchModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C1EB5A6F1F667DCE0088D05A /* WatchModel.xcdatamodel */,
+			);
+			currentVersion = C1EB5A6F1F667DCE0088D05A /* WatchModel.xcdatamodel */;
+			path = WatchModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = BE25AFDF1D4F33B000DAF094 /* Project object */;
 }
