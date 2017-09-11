@@ -43,6 +43,8 @@ class InterfaceController: WKInterfaceController {
         }
     }
     
+    private var dataArray: [Any] = []
+    
     // MARK: - Lifecycle
     
     override func awake(withContext context: Any?) {
@@ -83,13 +85,17 @@ class InterfaceController: WKInterfaceController {
             yAccelLabel.setText("not available")
             zAccelLabel.setText("not available")
         }
+        
+        Timer.scheduledTimer(withTimeInterval: 1 / 30, repeats: true) { _ in
+            self.appendNewInfo()
+        }
     }
     
     @IBAction func startWorkoutAction() {
         workoutManager.start()
         
         if timer == nil {
-            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.sendDataToParentApp()
             }
         }
@@ -105,7 +111,7 @@ class InterfaceController: WKInterfaceController {
         }
     }
     
-    func sendDataToParentApp() {
+    private func appendNewInfo() {
         
         let accelerationData: [String: Any] = [
             "x": self.accelerationData?.x ?? "not available",
@@ -116,12 +122,22 @@ class InterfaceController: WKInterfaceController {
         let data: [String: Any] = [
             "accelerator": accelerationData,
             "date": Date(),
-            "heartRate": heartRate ?? "-",
-            "repeat": Array(repeating: accelerationData, count: 30)
+            "heartRate": heartRate ?? "-"
         ]
+        
+        dataArray.append(data)
+    }
     
+    private func sendDataToParentApp() {
+        
+        let data: [String: Any] = [
+            "data": dataArray,
+            "date": Date()
+        ]
+        
         session.sendMessage(data, replyHandler: { reply in
             print(reply)
+            self.dataArray = []
         }) { error in
             print(error)
         }
@@ -131,7 +147,6 @@ class InterfaceController: WKInterfaceController {
 //MARK: - WKSessionDelegate
 
 extension InterfaceController: WCSessionDelegate {
-    
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         print("activationDidCompleteWith")
         isActivationComplete = true
