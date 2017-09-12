@@ -9,6 +9,9 @@
 import WatchKit
 import CoreMotion
 import WatchConnectivity
+import CoreBluetooth
+
+private let groupName = "group.org.railwaymen.healthkitdev"
 
 class InterfaceController: WKInterfaceController {
 
@@ -21,6 +24,9 @@ class InterfaceController: WKInterfaceController {
     private let workoutManager = WorkoutManager()
     private let motionManager = CMMotionManager()
     private var timer: Timer?
+    
+    private var fileManager: FileManager!
+    private var sharedFilePath: URL!
     
     fileprivate var isActivationComplete = false
     fileprivate var accelerationData: AccelerationData? {
@@ -51,6 +57,7 @@ class InterfaceController: WKInterfaceController {
         super.awake(withContext: context)
         
         motionManager.accelerometerUpdateInterval = 1 / 30
+        motionManager.gyroUpdateInterval = 1 / 30
     }
 
     override func willActivate() {
@@ -58,7 +65,7 @@ class InterfaceController: WKInterfaceController {
         
         // Configure session
         if (WCSession.isSupported()) {
-            session = WCSession.default()
+            session = WCSession.default
             session.delegate = self
             session.activate()
             
@@ -70,6 +77,20 @@ class InterfaceController: WKInterfaceController {
         }
         
         // Get accel data
+        print("isGyroAvailable --- \(motionManager.isGyroAvailable)")
+        if motionManager.isGyroAvailable {
+            motionManager.startGyroUpdates(to: OperationQueue.current!, withHandler: { (data, error) -> Void in
+                guard let data = data else { return }
+                let rotationX = data.rotationRate.x
+                let rotationY = data.rotationRate.y
+                let rotationZ = data.rotationRate.z
+                // do you want to want to do with the data
+                print(rotationX)
+                print(rotationY)
+                print(rotationZ)
+            })
+        }
+        
         if motionManager.isAccelerometerAvailable {
             
             guard let operation = OperationQueue.current else { return }
@@ -85,17 +106,13 @@ class InterfaceController: WKInterfaceController {
             yAccelLabel.setText("not available")
             zAccelLabel.setText("not available")
         }
-        
-        Timer.scheduledTimer(withTimeInterval: 1 / 30, repeats: true) { _ in
-            self.appendNewInfo()
-        }
     }
     
     @IBAction func startWorkoutAction() {
         workoutManager.start()
         
         if timer == nil {
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
                 self.sendDataToParentApp()
             }
         }
@@ -130,17 +147,43 @@ class InterfaceController: WKInterfaceController {
     
     private func sendDataToParentApp() {
         
-        let data: [String: Any] = [
-            "data": dataArray,
-            "date": Date()
+        
+        let accelerationData: [String: Any] = [
+            "x": self.accelerationData?.x ?? "not available",
+            "y": self.accelerationData?.y ?? "not available",
+            "z": self.accelerationData?.z ?? "not available"
         ]
         
-        session.sendMessage(data, replyHandler: { reply in
-            print(reply)
-            self.dataArray = []
-        }) { error in
-            print(error)
+        let data: [String: Any] = [
+            "accelerator": accelerationData,
+            "date": Date(),
+            "heartRate": heartRate ?? "-"
+        ]
+        
+        if session.isReachable {
+            session.sendMessage(data, replyHandler: { reply in
+                print(reply)
+            }, errorHandler: nil)
         }
+//        
+//        let data: [String: Any] = [
+//            "data": dataArray,
+//            "date": Date()
+//        ]
+        
+//        session.sendMessage(data, replyHandler: { reply in
+//            print(reply)
+//            self.dataArray = []
+//        }) { error in
+//            print(error)
+//        }
+
+//        try? fileManager.removeItem(at: sharedFilePath)
+//        let nsdictionary = (data as NSDictionary).write(to: sharedFilePath, atomically: true)
+        
+//        session.transferFile(sharedFilePath, metadata: data)
+        
+//        session.transferUserInfo(data)
     }
 }
 
