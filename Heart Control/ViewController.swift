@@ -9,11 +9,11 @@
 import UIKit
 import HealthKit
 import WatchConnectivity
-import CoreDataProxy
+import CoreBluetooth
 
 private let groupName = "group.org.railwaymen.healthkitdev"
 
-class ViewController: UIViewController, WCSessionDelegate {
+class ViewController: UIViewController {
     
     @IBOutlet weak var heartRateLabel: UILabel!
     @IBOutlet weak var xAccelerationLabel: UILabel!
@@ -21,25 +21,22 @@ class ViewController: UIViewController, WCSessionDelegate {
     @IBOutlet weak var zAccelerationLabel: UILabel!
     @IBOutlet weak var latencyLabel: UILabel!
     
-    var session: WCSession!
-    var helthStore: HKHealthStore!
+    private var session: WCSession!
+    private var helthStore: HKHealthStore!
     
-    var fileManager: FileManager!
-    var sharedFilePath: String?
+    fileprivate var peripheralManager: CBPeripheralManager!
+    fileprivate var watchService: CBMutableService!
+    fileprivate var watchCharacterisitc: CBMutableCharacteristic!
+    
+    fileprivate let BEAN_NAME = "Apple Watch"
+    fileprivate let BEAN_PIPE_UUID = CBUUID(string: "BE1F5591-4AB0-42E7-9438-33D411AE4093")
+    fileprivate let BEAN_SERVICE_UUID = CBUUID(string: "ABF616AE-21F3-412B-B5F0-34F4A3D49666")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        fileManager = FileManager.default
-    
-        let sharedContainer = fileManager.containerURL(forSecurityApplicationGroupIdentifier: groupName)
-        let dirPath = sharedContainer?.path
         
-        sharedFilePath = dirPath?.appending("sharedText.doc")
-//        if let path = sharedFilePath, fileManager.fileExists(atPath: path) {
-//            
-//        }
-    
+        peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
+        
         helthStore = HKHealthStore()
         if (WCSession.isSupported()) {
             session = WCSession.default
@@ -49,28 +46,66 @@ class ViewController: UIViewController, WCSessionDelegate {
     }
     
     @IBAction func startWatchApp(_ sender: Any) {
-     
+        
         if session.isWatchAppInstalled && session.activationState == .activated {
-     
-            helthStore.startWatchApp(with: HKWorkoutConfiguration(), completion: { isLunched, error in
-                
-                if isLunched {
-                    print("Succeed")
-                } else if let error = error {
-                    print("error -- \(error)")
-                } else {
-                    print("Unsupported")
+            if session.isReachable {
+                helthStore.startWatchApp(with: HKWorkoutConfiguration()) { isLunched, error in
+                    if isLunched {
+                        print("Succeed")
+                    } else if let error = error {
+                        print("error -- \(error)")
+                    } else {
+                        print("Unsupported")
+                    }
                 }
-            })
+            } else {
+                print("Please unlock iPhone")
+            }
+        } else {
+            print("Watch App not installed!")
         }
     }
     
-    private func createSharedFile() {
-        
-//        let sharedContainer =
+    fileprivate func setupService() {
+        watchCharacterisitc = CBMutableCharacteristic(type: BEAN_PIPE_UUID, properties: .notify, value: nil, permissions: .readable)
+        watchService = CBMutableService(type: BEAN_SERVICE_UUID, primary: true)
+        watchService.characteristics = [watchCharacterisitc]
+        peripheralManager.add(watchService)
     }
     
-    // MARK: - WCSessionDelegate
+    fileprivate func advertise() {
+        
+        let services = [BEAN_SERVICE_UUID]
+        let advertisingDictionary = [CBAdvertisementDataServiceUUIDsKey: services]
+        
+        peripheralManager.startAdvertising(advertisingDictionary)
+    }
+}
+
+// MARK: - CBPeripheralManagerDelegate
+
+extension ViewController: CBPeripheralManagerDelegate {
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        
+        switch peripheral.state {
+        case .poweredOn:
+            self.setupService()
+        default:
+            print("Bluetooth not avaiable.")
+        }
+    }
+    
+    func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
+        
+        DispatchQueue.main.async {
+            let data = "Works well".data(using: .utf8)!
+            self.peripheralManager.updateValue(data, for: self.watchCharacterisitc, onSubscribedCentrals: nil)
+        }
+    }
+}
+
+// MARK: - WCSessionDelegate
+extension ViewController: WCSessionDelegate {
     
     func sessionDidBecomeInactive(_ session: WCSession) {
         print("sessionDidBecomeInactive")
@@ -84,174 +119,4 @@ class ViewController: UIViewController, WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         print("activationDidCompleteWith")
     }
-    
-    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
-        DispatchQueue.main.async { [weak self] in
-            
-            if let dataArray = userInfo["data"] as? [[String: Any]] {
-                
-                for dictionary in dataArray {
-                    if let accelerationData = dictionary["accelerator"] as? [String: Any] {
-                        if let x = accelerationData["x"] as? Double {
-                            self?.xAccelerationLabel.text = "x: \(x)"
-                        } else {
-                            self?.xAccelerationLabel.text = "not available"
-                        }
-                        
-                        if let y = accelerationData["y"] as? Double {
-                            self?.yAccelerationLabel.text = "y: \(y)"
-                        } else {
-                            self?.yAccelerationLabel.text = "not available"
-                        }
-                        
-                        if let z = accelerationData["z"] as? Double {
-                            self?.zAccelerationLabel.text = "z: \(z)"
-                        } else {
-                            self?.zAccelerationLabel.text = "not available"
-                        }
-                    }
-                    
-                    if let heartRate = dictionary["heartRate"] as? Double {
-                        self?.heartRateLabel.text = "\(heartRate)"
-                    } else {
-                        self?.heartRateLabel.text = "-"
-                    }
-                }
-            }
-            
-            if let date = userInfo["date"] as? Date {
-                let interval = Date().timeIntervalSince(date)
-                let intervalString = String(format: "%.2f", interval)
-                self?.latencyLabel.text = "latency: \(intervalString)"
-            }
-        }
-    }
-    
-    func session(_ session: WCSession, didReceive file: WCSessionFile) {
-        print("didReceiveFile")
-        
-        if let message = NSDictionary(contentsOf: file.fileURL) as? Dictionary<String, Any> {
-            DispatchQueue.main.async { [weak self] in
-                
-                if let dataArray = message["data"] as? [[String: Any]] {
-                    
-                    for dictionary in dataArray {
-                        if let accelerationData = dictionary["accelerator"] as? [String: Any] {
-                            if let x = accelerationData["x"] as? Double {
-                                self?.xAccelerationLabel.text = "x: \(x)"
-                            } else {
-                                self?.xAccelerationLabel.text = "not available"
-                            }
-                            
-                            if let y = accelerationData["y"] as? Double {
-                                self?.yAccelerationLabel.text = "y: \(y)"
-                            } else {
-                                self?.yAccelerationLabel.text = "not available"
-                            }
-                            
-                            if let z = accelerationData["z"] as? Double {
-                                self?.zAccelerationLabel.text = "z: \(z)"
-                            } else {
-                                self?.zAccelerationLabel.text = "not available"
-                            }
-                        }
-                        
-                        if let heartRate = dictionary["heartRate"] as? Double {
-                            self?.heartRateLabel.text = "\(heartRate)"
-                        } else {
-                            self?.heartRateLabel.text = "-"
-                        }
-                    }
-                }
-                
-                if let date = message["date"] as? Date {
-                    let interval = Date().timeIntervalSince(date)
-                    let intervalString = String(format: "%.2f", interval)
-                    self?.latencyLabel.text = "latency: \(intervalString)"
-                }
-            }
-        }
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        print("didReceiveMessageData")
-        
-        replyHandler(["Works": "well"])
-        print(message)
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            if let accelerationData = message["accelerator"] as? [String: Any] {
-                if let x = accelerationData["x"] as? Double {
-                    self?.xAccelerationLabel.text = "x: \(x)"
-                } else {
-                    self?.xAccelerationLabel.text = "not available"
-                }
-                
-                if let y = accelerationData["y"] as? Double {
-                    self?.yAccelerationLabel.text = "y: \(y)"
-                } else {
-                    self?.yAccelerationLabel.text = "not available"
-                }
-                
-                if let z = accelerationData["z"] as? Double {
-                    self?.zAccelerationLabel.text = "z: \(z)"
-                } else {
-                    self?.zAccelerationLabel.text = "not available"
-                }
-            }
-            
-            if let heartRate = message["heartRate"] as? Double {
-                self?.heartRateLabel.text = "\(heartRate)"
-            } else {
-                self?.heartRateLabel.text = "-"
-            }
-            
-            if let date = message["date"] as? Date {
-                print("\(date) -- \(Date())")
-                let interval = Date().timeIntervalSince(date)
-                let intervalString = String(format: "%.2f", interval)
-                self?.latencyLabel.text = "latency: \(intervalString)"
-            }
-//
-//            
-//            if let dataArray = message["data"] as? [[String: Any]] {
-//                
-//                for dictionary in dataArray {
-//                    if let accelerationData = dictionary["accelerator"] as? [String: Any] {
-//                        if let x = accelerationData["x"] as? Double {
-//                            self?.xAccelerationLabel.text = "x: \(x)"
-//                        } else {
-//                            self?.xAccelerationLabel.text = "not available"
-//                        }
-//                        
-//                        if let y = accelerationData["y"] as? Double {
-//                            self?.yAccelerationLabel.text = "y: \(y)"
-//                        } else {
-//                            self?.yAccelerationLabel.text = "not available"
-//                        }
-//                        
-//                        if let z = accelerationData["z"] as? Double {
-//                            self?.zAccelerationLabel.text = "z: \(z)"
-//                        } else {
-//                            self?.zAccelerationLabel.text = "not available"
-//                        }
-//                    }
-//                    
-//                    if let heartRate = dictionary["heartRate"] as? Double {
-//                        self?.heartRateLabel.text = "\(heartRate)"
-//                    } else {
-//                        self?.heartRateLabel.text = "-"
-//                    }
-//                }
-//            }
-//            
-//            if let date = message["date"] as? Date {
-//                let interval = Date().timeIntervalSince(date)
-//                let intervalString = String(format: "%.2f", interval)
-//                self?.latencyLabel.text = "latency: \(intervalString)"
-//            }
-        }
-    }
 }
-

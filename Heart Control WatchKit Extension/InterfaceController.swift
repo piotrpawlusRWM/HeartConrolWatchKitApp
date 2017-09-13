@@ -12,6 +12,9 @@ import WatchConnectivity
 import CoreBluetooth
 
 private let groupName = "group.org.railwaymen.healthkitdev"
+fileprivate let BEAN_NAME = "Apple Watch"
+fileprivate let BEAN_PIPE_UUID = CBUUID(string: "BE1F5591-4AB0-42E7-9438-33D411AE4093")
+fileprivate let BEAN_SERVICE_UUID = CBUUID(string: "ABF616AE-21F3-412B-B5F0-34F4A3D49666")
 
 class InterfaceController: WKInterfaceController {
 
@@ -25,8 +28,9 @@ class InterfaceController: WKInterfaceController {
     private let motionManager = CMMotionManager()
     private var timer: Timer?
     
-    private var fileManager: FileManager!
-    private var sharedFilePath: URL!
+    fileprivate var centralManager: CBCentralManager?
+    fileprivate var connectedPeripheral: CBPeripheral?
+    fileprivate var connectedService: CBService?
     
     fileprivate var isActivationComplete = false
     fileprivate var accelerationData: AccelerationData? {
@@ -116,6 +120,9 @@ class InterfaceController: WKInterfaceController {
                 self.sendDataToParentApp()
             }
         }
+        if centralManager == nil {
+            centralManager = CBCentralManager(delegate: self, queue: nil)
+        }
     }
     
     @IBAction func stopWorkoutAction() {
@@ -125,6 +132,11 @@ class InterfaceController: WKInterfaceController {
         if let timer = timer {
             timer.invalidate()
             self.timer = nil
+        }
+        
+        if let centralManager = centralManager {
+            centralManager.stopScan()
+            self.centralManager = nil
         }
     }
     
@@ -147,7 +159,6 @@ class InterfaceController: WKInterfaceController {
     
     private func sendDataToParentApp() {
         
-        
         let accelerationData: [String: Any] = [
             "x": self.accelerationData?.x ?? "not available",
             "y": self.accelerationData?.y ?? "not available",
@@ -165,25 +176,67 @@ class InterfaceController: WKInterfaceController {
                 print(reply)
             }, errorHandler: nil)
         }
-//        
-//        let data: [String: Any] = [
-//            "data": dataArray,
-//            "date": Date()
-//        ]
-        
-//        session.sendMessage(data, replyHandler: { reply in
-//            print(reply)
-//            self.dataArray = []
-//        }) { error in
-//            print(error)
-//        }
+    }
+}
 
-//        try? fileManager.removeItem(at: sharedFilePath)
-//        let nsdictionary = (data as NSDictionary).write(to: sharedFilePath, atomically: true)
+//MARK: - CBCentralManagerDelegate
+
+extension InterfaceController: CBCentralManagerDelegate {
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
         
-//        session.transferFile(sharedFilePath, metadata: data)
+        if central.state == .poweredOn {
+            central.scanForPeripherals(withServices: nil, options: nil)
+        } else {
+            print("Bluetooth not avaiable.")
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-//        session.transferUserInfo(data)
+        print(peripheral)
+        
+        guard let device = (advertisementData as NSDictionary).object(forKey: CBAdvertisementDataLocalNameKey) as? NSString else { return }
+        
+        if device.contains(BEAN_NAME) {
+            self.centralManager?.stopScan()
+            
+            self.connectedPeripheral = peripheral
+            self.connectedPeripheral?.delegate = self
+            
+            centralManager?.connect(peripheral, options: nil)
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        peripheral.discoverServices(nil)
+    }
+}
+
+//MARK: - CBPeripheralDelegate
+
+extension InterfaceController: CBPeripheralDelegate {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        
+        guard let services = peripheral.services else { return }
+        for service in services {
+            
+            if service.uuid == BEAN_SERVICE_UUID {
+                peripheral.discoverCharacteristics(nil, for: service)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        
+        guard let characteristics = service.characteristics else { return }
+        for characteristic in characteristics {
+            if characteristic.uuid == BEAN_SERVICE_UUID {
+                self.connectedPeripheral?.setNotifyValue(true, for: characteristic)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
     }
 }
 
